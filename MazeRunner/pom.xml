@@ -1,0 +1,51 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>cst1303proj</groupId>
+  <artifactId>a_maze_runner_game</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  
+  <dependencies>
+	  <!-- WebSocket API -->
+	    <!--<dependency>
+	        <groupId>javax.websocket</groupId>
+	        <artifactId>javax.websocket-api</artifactId>
+	        <version>1.1</version>
+	        <scope>provided</scope>
+	    </dependency>-->
+	    
+	    <!-- https://mvnrepository.com/artifact/jakarta.websocket/jakarta.websocket-api -->
+		<dependency>
+		    <groupId>jakarta.websocket</groupId>
+		    <artifactId>jakarta.websocket-api</artifactId>
+		    <version>2.2.0</version>
+		    <scope>provided</scope>
+		</dependency>
+	    
+	    <!-- WebSocket implementation -->
+	    <!--<dependency>
+	        <groupId>org.glassfish.tyrus.bundles</groupId>
+	        <artifactId>tyrus-standalone-client</artifactId>
+	        <version>1.17</version>
+	    </dependency>-->
+	    
+	    <dependency>
+		    <groupId>org.glassfish.tyrus</groupId>
+		    <artifactId>tyrus-server</artifactId>
+		    <version>2.1.0</version>
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/org.glassfish.tyrus/tyrus-container-grizzly-server -->
+		<dependency>
+		    <groupId>org.glassfish.tyrus</groupId>
+		    <artifactId>tyrus-container-grizzly-server</artifactId>
+		    <version>2.1.0</version>
+		    <!--<scope>test</scope>-->
+		</dependency>
+		
+		<dependency>
+		    <groupId>org.glassfish.tyrus</groupId>
+		    <artifactId>tyrus-core</artifactId>
+		    <version>2.1.0</version>
+		</dependency>
+    </dependencies>
+</project>
