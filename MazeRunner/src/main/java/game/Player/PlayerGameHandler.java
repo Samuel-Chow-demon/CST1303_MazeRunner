@@ -14,9 +14,9 @@ public class PlayerGameHandler {
 	private MazeGame gamePanel;
 	private GameClient client;
 	
-	public PlayerGameHandler() 
+	public PlayerGameHandler(Boolean isComPlayer) 
 	{	
-		gamePanel = new MazeGame();
+		gamePanel = new MazeGame(isComPlayer);
 		
 		// create GameClient with set call back to receive message to GameUI
 		client = new GameClient((bytebuffer)->{
@@ -144,7 +144,7 @@ public class PlayerGameHandler {
 	public static void main(String[] args)
 	{
 		boolean bIsConnectionSuccess = true;
-		PlayerGameHandler playerGame = new PlayerGameHandler();
+		PlayerGameHandler playerGame = new PlayerGameHandler(false);
 		
 		// Connection to the Server
 		try {

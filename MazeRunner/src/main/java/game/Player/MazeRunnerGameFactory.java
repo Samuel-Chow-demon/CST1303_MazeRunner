@@ -17,6 +17,8 @@ import java.net.URISyntaxException;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -109,16 +111,22 @@ public class MazeRunnerGameFactory {
         // Child
         // Modify the creation flow, setup the (Child) Button first before setup the (Parent) Panel
         JButton newGameBtnPlayer = JPanelUtility.createButton("Start Game", buttonWidth, buttonHeight, Color.ORANGE, 1, bkgrdColor);
+        
+        JCheckBox checkBoxIsComPlayer = new JCheckBox("Com Player");
+        checkBoxIsComPlayer.setBackground(bkgrdColor);
+        checkBoxIsComPlayer.setForeground(Color.WHITE);
+        JPanelUtility.setMargin(checkBoxIsComPlayer, 0, 0, 20, 0);
         	
         // Parent
         JPanel createPlayerPanel = JPanelUtility.createFlowLayoutPanel(FlowLayout.CENTER, 0, panelVGap, bkgrdColor);
         createPlayerPanel.add(newGameBtnPlayer);
+        createPlayerPanel.add(checkBoxIsComPlayer);
         
         // After added the child component, set the desired size
         JPanelUtility.setPanelSize(createPlayerPanel, null, buttonHeight + panelVGap * 2); // set null to use the current preferredSize
         
         addActionListener(newGameBtnPlayer, ()->{
-        	CreateGameBoard();
+        	CreateGameBoard(checkBoxIsComPlayer);
         	return null;
         });
         
@@ -186,7 +194,7 @@ public class MazeRunnerGameFactory {
 //        }
 //    }
 	
-	private void CreateGameBoard()
+	private void CreateGameBoard(JCheckBox chkBoxComPlayer)
 	{
 		// "ws://localhost:8080/websockets/mazegame"
 		StringBuilder builder = new StringBuilder();
@@ -196,7 +204,7 @@ public class MazeRunnerGameFactory {
 		if (isServerReachable(builder.toString()))
 		{
 			boolean bIsConnectionSuccess = true;
-			PlayerGameHandler playerGame = new PlayerGameHandler();
+			PlayerGameHandler playerGame = new PlayerGameHandler(chkBoxComPlayer.isSelected());
 			
 			// Connection to the Server
 			try {

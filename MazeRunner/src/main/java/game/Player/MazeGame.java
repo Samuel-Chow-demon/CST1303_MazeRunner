@@ -4,8 +4,8 @@ import static game.UtilityAndConstant.ConstantAndDefine.COMMAND_DATA_KEY;
 import static game.UtilityAndConstant.ConstantAndDefine.ENTITY_KEY_CLOSE;
 import static game.UtilityAndConstant.ConstantAndDefine.ENTITY_KEY_ID;
 import static game.UtilityAndConstant.ConstantAndDefine.ENTITY_KEY_REQUEST;
-import static game.UtilityAndConstant.ConstantAndDefine.GAME_END_KEY;
 import static game.UtilityAndConstant.ConstantAndDefine.FPS;
+import static game.UtilityAndConstant.ConstantAndDefine.GAME_END_KEY;
 import static game.UtilityAndConstant.ConstantAndDefine.GAME_TILE_SIZE;
 import static game.UtilityAndConstant.ConstantAndDefine.MAP_DATA_KEY;
 import static game.UtilityAndConstant.ConstantAndDefine.PLAYER_DATA_KEY;
@@ -29,8 +29,9 @@ import static game.UtilityAndConstant.ConstantAndDefine.ePLAYER_SPRITE_DIR.eRIGH
 import static game.UtilityAndConstant.ConstantAndDefine.ePLAYER_SPRITE_DIR.eTOTAL_SPRITE_DIR;
 import static game.UtilityAndConstant.ConstantAndDefine.ePLAYER_SPRITE_DIR.eUP_1;
 import static game.UtilityAndConstant.ConstantAndDefine.ePLAYER_SPRITE_DIR.eUP_2;
-
 import static game.UtilityAndConstant.JPanelUtility.eALIGNMENT.eALIGN_CENTER;
+
+import static game.UtilityAndConstant.ConstantAndDefine.ePLAYER.eP1;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -43,6 +44,7 @@ import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -84,6 +86,10 @@ public class MazeGame extends JPanel implements Runnable, AutoCloseable{
 	private Integer spriteCountFPSPlay;
 	
 	private PlayerMazeManager mazeManager;
+	
+	private Boolean isComPlayer;
+	private Long nextComUpdateTime, nextComDirUpdateTime;
+	private eCONTROL_KEY eLastComDir;
 		
 	private enum eGAME_STATE{
 		eGAME, eEND, eTOTAL_STATE;
@@ -111,7 +117,7 @@ public class MazeGame extends JPanel implements Runnable, AutoCloseable{
 	}
 	private eEND_GAME_COMMAND eEndGameCmd;
 	 
-	public MazeGame()
+	public MazeGame(Boolean isComPlayer)
 	{
 		this.setPreferredSize(new Dimension(UI_WIDTH, UI_HEIGHT));
 		this.setBackground(Color.black);
@@ -144,6 +150,11 @@ public class MazeGame extends JPanel implements Runnable, AutoCloseable{
 		winGamePlayer = null;
 		eWinnerSpirteIdx = eUP_1;
 		eEndGameCmd = eEND_GAME_COMMAND.eRESTART;
+		
+		this.isComPlayer = isComPlayer;
+		nextComUpdateTime = (long)0;
+		nextComDirUpdateTime = (long)0;
+		eLastComDir = eDOWN;
 		
 		SetGameState(eGAME_STATE.eGAME);
 	}
@@ -255,12 +266,18 @@ public class MazeGame extends JPanel implements Runnable, AutoCloseable{
 		double loopFrameIntervalPortion = 0;
 		long currentLoopStartTime;
 		long lastLoopStartTime = System.nanoTime();
+		//long timeThatRun = 0;
+		//int frameDrawnCount = 0;
 		
 		while(!isShutDown)
 		{
 			currentLoopStartTime = System.nanoTime();
 			
-			loopFrameIntervalPortion += ((currentLoopStartTime - lastLoopStartTime) / eachFrameInterval);
+			double lastLoopUsedTime = (currentLoopStartTime - lastLoopStartTime);
+			
+			loopFrameIntervalPortion += (lastLoopUsedTime / eachFrameInterval);
+			
+			//timeThatRun += lastLoopUsedTime;
 			
 			lastLoopStartTime = currentLoopStartTime;
 			
@@ -277,7 +294,16 @@ public class MazeGame extends JPanel implements Runnable, AutoCloseable{
 				updateSpriteIdx();
 				
 				loopFrameIntervalPortion--; // minus 1 frame size portion
+				
+				//frameDrawnCount++;
 			}
+			
+//			if (timeThatRun >= 1_000_000_000) // per 1 sec
+//			{
+//				System.out.println("FPS : " + frameDrawnCount);
+//				frameDrawnCount = 0;
+//				timeThatRun -= 1_000_000_000;
+//			}
 			
 			CheckAndWaitForEachLoop(currentLoopStartTime);
 		}
@@ -302,28 +328,59 @@ public class MazeGame extends JPanel implements Runnable, AutoCloseable{
 	{
 		boolean bUpdated = false;
 		
-		// Check Player Control
-		if (keyInput.isKeyPressed(eUP))
+		if (isComPlayer)
 		{
-			mazeManager.CollisionCheckAndMove(ownPlayer, eUP);
-			bUpdated = true;
+			Boolean needUpdate = (System.nanoTime() - nextComUpdateTime > 0) ? true : false;
+			if (nextComUpdateTime == 0 || needUpdate)
+			{
+				Random rand = new Random();
+				
+				Boolean isCollided = mazeManager.CollisionCheckAndMove(ownPlayer, eLastComDir);
+				
+				if (isCollided || (System.nanoTime() - nextComDirUpdateTime > 0))
+				{
+					int randomDir = rand.nextInt(4);
+					eCONTROL_KEY eKeyDir = eCONTROL_KEY.fromValue(randomDir);
+					while (eKeyDir == eLastComDir)
+					{
+						randomDir = rand.nextInt(4);
+						eKeyDir = eCONTROL_KEY.fromValue(randomDir);
+					}
+					eLastComDir = eKeyDir;
+					
+					nextComDirUpdateTime = System.nanoTime() + ((rand.nextInt(700) * 1_000_000) + 300_000_000); // next Dir update would be 300 - 1000 milli second after
+				}
+				
+				nextComUpdateTime = System.nanoTime() + ((rand.nextInt(50) * 1_000_000)); // next update would be 0 - 50 milli second after
+				
+				bUpdated = true;
+			}
 		}
-		else if (keyInput.isKeyPressed(eDOWN))
-		{
-			mazeManager.CollisionCheckAndMove(ownPlayer, eDOWN);
-			bUpdated = true;
+		else
+		{	
+			// Check Player Control
+			if (keyInput.isKeyPressed(eUP))
+			{
+				mazeManager.CollisionCheckAndMove(ownPlayer, eUP);
+				bUpdated = true;
+			}
+			else if (keyInput.isKeyPressed(eDOWN))
+			{
+				mazeManager.CollisionCheckAndMove(ownPlayer, eDOWN);
+				bUpdated = true;
+			}
+			
+			if (keyInput.isKeyPressed(eLEFT))
+			{
+				mazeManager.CollisionCheckAndMove(ownPlayer, eLEFT);
+				bUpdated = true;
+			}
+			else if (keyInput.isKeyPressed(eRIGHT))
+			{
+				mazeManager.CollisionCheckAndMove(ownPlayer, eRIGHT);
+				bUpdated = true;
+			}
 		}
-		
-		if (keyInput.isKeyPressed(eLEFT))
-		{
-			mazeManager.CollisionCheckAndMove(ownPlayer, eLEFT);
-			bUpdated = true;
-		}
-		else if (keyInput.isKeyPressed(eRIGHT))
-		{
-			mazeManager.CollisionCheckAndMove(ownPlayer, eRIGHT);
-			bUpdated = true;
-		} 
 		
 		if (bUpdated || bFirstCreateUpdate)
 		{

@@ -128,6 +128,10 @@ public class Player {
 	{
 		return this.speed;
 	}
+	public void setSpeed(int speed)
+	{
+		this.speed = speed;
+	}
 	
 	public void setWin()
 	{
@@ -151,41 +155,49 @@ public class Player {
 		return this.collider;
 	}
 	
-	public void moveUp()
+	public Boolean moveUp()
 	{
 		// Boundary Condition
 		if (this.position.getLocation().y - speed >= 0)
 		{
 			this.position.setLocation(this.position.getLocation().x,
 								  		this.position.getLocation().y - speed);
+			return false;
 		}
+		return true;
 	}
-	public void moveDown()
+	public Boolean moveDown()
 	{
 		// Boundary Condition
 		if (this.position.getLocation().y + speed <= (UI_HEIGHT - PLAYER_SIZE_XY))
 		{
 			this.position.setLocation(this.position.getLocation().x,
 									  this.position.getLocation().y + speed);
+			return false;
 		}
+		return true;
 	}
-	public void moveLeft()
+	public Boolean moveLeft()
 	{
 		// Boundary Condition
 		if (this.position.getLocation().x - speed >= 0)
 		{
 			this.position.setLocation(this.position.getLocation().x - speed,
 									  this.position.getLocation().y);
+			return false;
 		}
+		return true;
 	}
-	public void moveRight()
+	public Boolean moveRight()
 	{
 		// Boundary Condition
 		if (this.position.getLocation().x + speed <= (UI_WIDTH - PLAYER_SIZE_XY))
 		{
 			this.position.setLocation(this.position.getLocation().x + speed,
 									  this.position.getLocation().y);
+			return false;
 		}
+		return true;
 	}
 	
 	public void setStartPos(Point pos)

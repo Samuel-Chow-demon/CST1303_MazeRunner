@@ -118,8 +118,9 @@ public class PlayerMazeManager
 				(mapTileTypeAttrib.containsKey(eType2) && mapTileTypeAttrib.get(eType2).isColliderOn());
 	}
 	
-	public void CollisionCheckAndMove(Player player, eCONTROL_KEY eDir)
+	public Boolean CollisionCheckAndMove(Player player, eCONTROL_KEY eDir)
 	{
+		Boolean isCollided = false;
 		Rectangle playerCollider = player.getCollider();
 		
 		int playerColliderPosLeftX 	 = player.getX() + playerCollider.x;
@@ -146,9 +147,11 @@ public class PlayerMazeManager
 				checkTile1Type = curMazeTile[checkTileMapTopRowIdx][checkTileMapLeftColIdx];
 				checkTile2Type = curMazeTile[checkTileMapTopRowIdx][checkTileMapRightColIdx];
 				
-				if (!isCollided(checkTile1Type, checkTile2Type)) // if not collided can allow to move up
+				isCollided = isCollided(checkTile1Type, checkTile2Type);
+				
+				if (!isCollided) // if not collided can allow to move up
 				{
-					player.moveUp();
+					isCollided = player.moveUp();
 				}
 				break;
 				
@@ -157,9 +160,11 @@ public class PlayerMazeManager
 				checkTile1Type = curMazeTile[checkTileMapBottomRowIdx][checkTileMapLeftColIdx];
 				checkTile2Type = curMazeTile[checkTileMapBottomRowIdx][checkTileMapRightColIdx];
 				
-				if (!isCollided(checkTile1Type, checkTile2Type)) // if not collided can allow to move down
+				isCollided = isCollided(checkTile1Type, checkTile2Type);
+				
+				if (!isCollided) // if not collided can allow to move down
 				{
-					player.moveDown();
+					isCollided = player.moveDown();
 				}
 				break;
 				
@@ -168,9 +173,11 @@ public class PlayerMazeManager
 				checkTile1Type = curMazeTile[checkTileMapTopRowIdx][checkTileMapLeftColIdx];
 				checkTile2Type = curMazeTile[checkTileMapBottomRowIdx][checkTileMapLeftColIdx];
 				
-				if (!isCollided(checkTile1Type, checkTile2Type)) // if not collided can allow to move left
+				isCollided = isCollided(checkTile1Type, checkTile2Type);
+						
+				if (!isCollided) // if not collided can allow to move left
 				{
-					player.moveLeft();
+					isCollided = player.moveLeft();
 				}
 				
 				break;
@@ -180,15 +187,18 @@ public class PlayerMazeManager
 				checkTile1Type = curMazeTile[checkTileMapTopRowIdx][checkTileMapRightColIdx];
 				checkTile2Type = curMazeTile[checkTileMapBottomRowIdx][checkTileMapRightColIdx];
 				
-				if (!isCollided(checkTile1Type, checkTile2Type)) // if not collided can allow to move Right
+				isCollided = isCollided(checkTile1Type, checkTile2Type);
+				
+				if (!isCollided) // if not collided can allow to move Right
 				{
-					player.moveRight();
+					isCollided = player.moveRight();
 				}
 				break;
 				
 			default:
 				break;
 		}
+		return isCollided;
 	}
 	
 	public void CheckIfPlayerWin(Player player)
