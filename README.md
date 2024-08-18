@@ -17,6 +17,7 @@
 | Date | Comment | Author|
 |------|---------|-------|
 |3 Aug 2024| 1st Revision<br>23 x 23 Map Gaming, Max 4 players, basic movement, no widgets, no traps| Chow, Tsz Chun Samuel|
+|17 Aug 2024| 2nd Revision<br>Added Unit Test, some bugs resolved| Chow, Tsz Chun Samuel|
 |||
 
 <br>
@@ -145,7 +146,7 @@
 <h4><u>Overview :</u></h4>
 
 <p align="center">
-    <img src="./pic/SystemOverview.png">
+    <img src="./pic/ClassDiagramOverview.png">
 </p>
 
 <h4><u>Detailed :</u></h4>
