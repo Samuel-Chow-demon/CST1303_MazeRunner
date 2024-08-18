@@ -82,7 +82,7 @@ public class GameSpirites {
 		return playerImageMap.get(player);
 	}
 	
-	private BufferedImage getScaledImage(BufferedImage origImg, int XSize, int YSize)
+	BufferedImage getScaledImage(BufferedImage origImg, int XSize, int YSize)
 	{
 		BufferedImage scaledImg = new BufferedImage(XSize, YSize, origImg.getType());
 		Graphics2D g2D = scaledImg.createGraphics();
@@ -90,7 +90,7 @@ public class GameSpirites {
 		return scaledImg;
 	}
 	
-	private Map<ePLAYER_SPRITE_DIR, BufferedImage> getPlayerBufferedImage(ePLAYER player)
+	Map<ePLAYER_SPRITE_DIR, BufferedImage> getPlayerBufferedImage(ePLAYER player)
 	{
 		Map<ePLAYER_SPRITE_DIR, BufferedImage> map = new HashMap<>();
 		
@@ -180,7 +180,7 @@ public class GameSpirites {
 		return map;
 	}
 	
-	private BufferedImage getTileEntityBufferedImage(eTILE type)
+	BufferedImage getTileEntityBufferedImage(eTILE type)
 	{
 		String entity = ""; // default not valid
 		

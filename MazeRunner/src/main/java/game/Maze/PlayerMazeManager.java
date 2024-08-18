@@ -43,6 +43,15 @@ public class PlayerMazeManager
 		mapTileTypeAttrib.put(eFLAG, new TileEntity(false, true));		// Flag to allow move over
 	}
 	
+	public Map<eTILE, TileEntity> getMapTileAttrib()
+	{
+		return this.mapTileTypeAttrib;
+	}
+	public  eTILE[][] getCurMazeTile()
+	{
+		return this.curMazeTile;
+	}
+	
 	public void setMazeTileMap(eTILE[][] mapTile)
 	{
 		lock.writeLock().lock();

@@ -81,7 +81,7 @@ public class Player {
 		
 		this.finishPosition = new Point(finishPos.x, finishPos.y);
 		
-		speed = PLAYER_DEFAULT_SPEED;
+		this.speed = speed;
 		this.id = id;
 		this.specificName = specName;
 		
@@ -211,9 +211,9 @@ public class Player {
 		this.position.setLocation(x, this.position.getY());
 	}
 	
-	public void setY(int x)
+	public void setY(int y)
 	{
-		this.position.setLocation(x, this.position.getY());
+		this.position.setLocation(this.position.getX(), y);
 	}
 	
 	public int getX()
