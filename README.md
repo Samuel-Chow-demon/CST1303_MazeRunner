@@ -336,9 +336,17 @@
 One Single UI
 
 ### 6.3 Use Cases / User Function Description
+
+#### 6.3.1 Player win when reach the goal
  
  <p align="center">
     <img src="./pic/Subwindow.png">
+</p>
+
+#### 6.3.2 Multiplayer windows (support up to 4 players)
+ 
+ <p align="center">
+    <img src="./pic/multiplayer.webp">
 </p>
 
 <br>
